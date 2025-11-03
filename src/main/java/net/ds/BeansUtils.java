@@ -1,5 +1,12 @@
 package net.ds;
 
+import carpet.CarpetExtension;
+import carpet.CarpetServer;
+import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
+import me.fzzyhmstrs.fzzy_config.api.RegisterType;
+import net.ds.carpet.BeansUtilsExtension;
+import net.ds.config.BeansUtilsClientConfig;
+import net.ds.config.BeansUtilsServerConfig;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -7,18 +14,16 @@ import org.slf4j.LoggerFactory;
 
 public class BeansUtils implements ModInitializer {
 	public static final String MOD_ID = "beans-utils";
-
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final CarpetExtension CARPET_EXTENSION = new BeansUtilsExtension();
+	public static BeansUtilsClientConfig CONFIG = ConfigApiJava.registerAndLoadConfig(BeansUtilsClientConfig::new, RegisterType.CLIENT);
+	public static BeansUtilsServerConfig SERVER_CONFIG = ConfigApiJava.registerAndLoadConfig(BeansUtilsServerConfig::new, RegisterType.SERVER);
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+		CarpetServer.manageExtension(CARPET_EXTENSION);
 
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("BeansUtils initialized");
 	}
+
 }

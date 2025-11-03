@@ -16,6 +16,14 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+
+	maven {
+		name = "FzzyMaven"
+		url = "https://maven.fzzyhmstrs.me/"
+	}
+	maven {
+		url 'https://masa.dy.fi/maven'
+	}
 }
 
 fabricApi {
@@ -32,7 +40,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
+	//Config
+	modImplementation "me.fzzyhmstrs:fzzy_config:${project.fzzyConfigVersion}"
+	//Carpet
+	modImplementation "carpet:fabric-carpet:${project.carpetVersion}"
 }
 
 processResources {

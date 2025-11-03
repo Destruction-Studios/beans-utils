@@ -5,7 +5,7 @@
 	"name": "Beans Utils",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Me!"
+		"TheFounderOfBeanz"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -29,7 +29,9 @@
 		"fabricloader": ">=0.17.3",
 		"minecraft": "~1.21.10",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"fzzy_config": "*",
+		"carpet": ">=1.4.188"
 	},
 	"suggests": {
 		"another-mod": "*"
