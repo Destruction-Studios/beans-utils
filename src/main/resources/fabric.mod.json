@@ -3,7 +3,7 @@
 	"id": "beans-utils",
 	"version": "${version}",
 	"name": "Beans Utils",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Utils for my Multiplayer servers.",
 	"authors": [
 		"TheFounderOfBeanz"
 	],
@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"net.ds.BeansUtils"
+		],
+		"client": [
+			"net.ds.BeansUtilsClient"
 		],
 		"fabric-datagen": [
 			"net.ds.BeansUtilsDataGenerator"
@@ -32,8 +35,5 @@
 		"fabric-api": "*",
 		"fzzy_config": "*",
 		"carpet": ">=1.4.188"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }

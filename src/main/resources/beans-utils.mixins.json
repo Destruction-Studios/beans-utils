@@ -3,15 +3,18 @@
   "package": "net.ds.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-
+    "EntityMixin",
+    "LivingEntityMixin",
+    "ServerPlayerEntityMixin"
+  ],
+  "client": [
+    "LeaveButtonMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  },
-  "client": [
-    "LeaveButtonMixin"
-  ]
+  }
+
 }

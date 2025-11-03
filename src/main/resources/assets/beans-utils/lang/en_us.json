@@ -1,5 +1,7 @@
 {
   "beans-utils.rule.banPlayersUponDeath.desc": "Bans a user upon dying",
 
-  "beans-utils.rule.mobExpPercent.desc": "The percentage of exp a mob drops upon dying"
+  "beans-utils.rule.mobExpPercent.desc": "The percentage of exp a mob drops upon dying",
+
+  "death.attack.combat_log.player": "%1$s combat logged."
 }
