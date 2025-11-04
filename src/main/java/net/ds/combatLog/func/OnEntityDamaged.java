@@ -3,10 +3,12 @@ package net.ds.combatLog.func;
 import net.ds.BeansUtils;
 import net.ds.combatLog.CombatData;
 import net.ds.combatLog.IEntityDataSaver;
+import net.ds.network.CombatPayload;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class OnEntityDamaged {
@@ -25,8 +27,11 @@ public class OnEntityDamaged {
                 return;
             }
             CombatData.startCombat((IEntityDataSaver) target);
+            CombatPayload.sendEnterCombat((ServerPlayerEntity) target);
+
             if (attacker instanceof PlayerEntity) {
                 CombatData.startCombat((IEntityDataSaver) attacker);
+                CombatPayload.sendEnterCombat((ServerPlayerEntity) attacker);
             }
         }
     }

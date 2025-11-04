@@ -2,12 +2,14 @@ package net.ds.combatLog.func;
 
 import net.ds.combatLog.CombatData;
 import net.ds.combatLog.IEntityDataSaver;
+import net.ds.network.CombatPayload;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CombatTick {
     public static void CombatTick(MinecraftServer server) {
-        for (PlayerEntity player : server.getPlayerManager().getPlayerList()) {
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             IEntityDataSaver data = (IEntityDataSaver) player;
 
             if (!CombatData.isInCombat(data)) continue;
@@ -20,6 +22,7 @@ public class CombatTick {
             } else if (CombatData.isInCombat(data)) {
                 CombatData.endCombat(data);
                 SendCombatMessage.SendLeaveCombatMessage(player);
+                CombatPayload.sendLeaveCombat(player);
             }
         }
     }

@@ -1,7 +1,7 @@
 package net.ds.network;
 
-import com.mojang.serialization.Codec;
 import net.ds.BeansUtils;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryByteBuf;
@@ -12,10 +12,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.BlockPos;
 
-public class Handshake {
+import java.util.Objects;
+
+public class HandshakePayload {
     public record HandshakeS2CPayload(String modVersion) implements CustomPayload {
         public static final Identifier HANDSHAKE_PAYLOAD_ID = BeansUtils.of("handshakes2c");
         public static final CustomPayload.Id<HandshakeS2CPayload> ID = new CustomPayload.Id<>(HANDSHAKE_PAYLOAD_ID);
@@ -42,8 +42,16 @@ public class Handshake {
         ServerPlayerEntity player = handler.getPlayer();
         HandshakeS2CPayload payload = new HandshakeS2CPayload(BeansUtils.MOD_VERSION);
 
-        ServerPlayNetworking.send(player, payload);
+        BeansUtils.LOGGER.info("Requesting Handshake from {}...", Objects.requireNonNull(handler.getPlayer().getDisplayName()).getString());
 
-        BeansUtils.LOGGER.info("SENT PAYLOAD!!");
+        ServerPlayNetworking.send(player, payload);
+    }
+
+    public static void returnHandshake() {
+        HandshakeC2SPayload payload = new HandshakeC2SPayload(BeansUtils.MOD_VERSION);
+
+        BeansUtils.LOGGER.info("Returning Payload with mod version {}", BeansUtils.MOD_VERSION);
+
+        ClientPlayNetworking.send(payload);
     }
 }

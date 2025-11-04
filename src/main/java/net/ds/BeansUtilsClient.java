@@ -3,21 +3,28 @@ package net.ds;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
 import net.ds.config.BeansUtilsClientConfig;
-import net.ds.network.Handshake;
+import net.ds.network.CombatPayload;
+import net.ds.network.HandshakePayload;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class BeansUtilsClient implements ClientModInitializer {
+    public static boolean isInCombat = false;
+
     public static BeansUtilsClientConfig CLIENT_CONFIG = ConfigApiJava.registerAndLoadConfig(BeansUtilsClientConfig::new, RegisterType.CLIENT);
 
     @Override
     public void onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(Handshake.HandshakeS2CPayload.ID, ((handshakeS2CPayload, context) -> {
-            BeansUtils.LOGGER.info("RECIVED PAYLOAD!!!!!!!");
+        ClientPlayNetworking.registerGlobalReceiver(HandshakePayload.HandshakeS2CPayload.ID, ((handshakeS2CPayload, context) -> {
+            BeansUtils.LOGGER.info("Received Server Payload");
+
+            HandshakePayload.returnHandshake();
+        }));
+        ClientPlayNetworking.registerGlobalReceiver(CombatPayload.CombatS2CPayload.ID, ((combatS2CPayload, context) -> {
+            isInCombat = combatS2CPayload.isInCombat();
+            BeansUtils.LOGGER.info("Received combat packet: {}", isInCombat);
         }));
 
-        BeansUtils.LOGGER.info("Client Initialized");
+        BeansUtils.LOGGER.info("BeansUtils Common initialized ({})", BeansUtils.MOD_VERSION);
     }
 }
