@@ -33,7 +33,6 @@
 		"minecraft": "~1.21.10",
 		"java": ">=21",
 		"fabric-api": "*",
-		"fzzy_config": "*",
-		"carpet": ">=1.4.188"
+		"fzzy_config": "*"
 	}
 }

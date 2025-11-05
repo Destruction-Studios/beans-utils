@@ -1,10 +1,7 @@
 package net.ds;
 
-import carpet.CarpetExtension;
-import carpet.CarpetServer;
 import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import me.fzzyhmstrs.fzzy_config.api.RegisterType;
-import net.ds.carpet.BeansUtilsExtension;
 import net.ds.config.BeansUtilsServerConfig;
 import net.ds.events.EndTick;
 import net.ds.network.CombatPayload;
@@ -35,7 +32,6 @@ public class BeansUtils implements ModInitializer {
 	public static final String MOD_ID = "beans-utils";
 	public static final String MOD_VERSION = "1.0.0";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static final CarpetExtension CARPET_EXTENSION = new BeansUtilsExtension();
 	public static BeansUtilsServerConfig SERVER_CONFIG = ConfigApiJava.registerAndLoadConfig(BeansUtilsServerConfig::new, RegisterType.BOTH);
 
 	public static final RegistryKey<DamageType> COMBAT_LOG_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, of("combat_log"));
@@ -48,8 +44,6 @@ public class BeansUtils implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		CarpetServer.manageExtension(CARPET_EXTENSION);
-
 		registerPayloads();
 		registerEvents();
 

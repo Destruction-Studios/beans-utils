@@ -21,9 +21,6 @@ repositories {
 		name = "FzzyMaven"
 		url = "https://maven.fzzyhmstrs.me/"
 	}
-	maven {
-		url 'https://masa.dy.fi/maven'
-	}
 }
 
 fabricApi {
@@ -42,8 +39,6 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	//Config
 	modImplementation "me.fzzyhmstrs:fzzy_config:${project.fzzyConfigVersion}"
-	//Carpet
-	modImplementation "carpet:fabric-carpet:${project.carpetVersion}"
 }
 
 processResources {
