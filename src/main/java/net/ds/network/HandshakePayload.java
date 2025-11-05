@@ -1,6 +1,7 @@
 package net.ds.network;
 
 import net.ds.BeansUtils;
+import net.ds.config.BeansUtilsServerConfig;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,6 +17,7 @@ import net.minecraft.util.Identifier;
 import java.util.Objects;
 
 public class HandshakePayload {
+    private static final int HANDSHAKE_TIMEOUT_TICKS = 60;
     public record HandshakeS2CPayload(String modVersion) implements CustomPayload {
         public static final Identifier HANDSHAKE_PAYLOAD_ID = BeansUtils.of("handshakes2c");
         public static final CustomPayload.Id<HandshakeS2CPayload> ID = new CustomPayload.Id<>(HANDSHAKE_PAYLOAD_ID);
@@ -38,13 +40,13 @@ public class HandshakePayload {
         }
     }
 
-    public static void attemptHandshake(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        ServerPlayerEntity player = handler.getPlayer();
+    public static void attemptHandshake(ServerPlayerEntity player) {
         HandshakeS2CPayload payload = new HandshakeS2CPayload(BeansUtils.MOD_VERSION);
 
-        BeansUtils.LOGGER.info("Requesting Handshake from {}...", Objects.requireNonNull(handler.getPlayer().getDisplayName()).getString());
+        BeansUtils.LOGGER.info("Requesting Handshake from {}...", Objects.requireNonNull(player.getDisplayName()).getString());
 
         ServerPlayNetworking.send(player, payload);
+        BeansUtils.waitingForResponse.put(player.getUuid(), BeansUtils.SERVER_CONFIG.handshakeTimeout);
     }
 
     public static void returnHandshake() {

@@ -14,16 +14,40 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Version(version = 1)
+@Version(version = 4)
 public class BeansUtilsServerConfig extends Config {
     public BeansUtilsServerConfig() {
         super(Identifier.of(BeansUtils.MOD_ID, "server_config"));
     }
 
+    @Comment("If players without the mod installed will be kicked.")
+    public boolean requireMod = false;
+    @Comment("The kick message a player gets without the mod.")
+    public String noModDisconnectMessage = "This server requires BeansUtils";
+    @Comment("The max amount of time a player can not respond before being kicked.")
+    public int handshakeTimeout = 200;
+    @Comment("Send a message to a player without the mod recommending it.")
+    public boolean notifyPlayersWithNoMod = true;
+    @Comment("Message a player without the mod is notified with")
+    public String notifyPlayerMessage = "This server recommends you install BeansUtils for more functionality.";
+
+    @Comment("Vanilla feature toggles")
+    public FeatureToggling featureToggling = new FeatureToggling();
+    @Comment("Combat Tagging related settings")
     public CombatLogging combatLogging = new CombatLogging();
+
+    public static class FeatureToggling extends ConfigSection {
+        public FeatureToggling() {super();}
+
+        @Comment("Whether or not Nether Portals can be used.")
+        public boolean netherPortalsEnabled = true;
+        @Comment("Whether or not End Portals can be used.")
+        public boolean endPortalsEnabled = true;
+        @Comment("Whether or not Eyes of Ender can be used.")
+        public boolean eyesOfEnderEnabled = true;
+    }
 
     public static class CombatLogging extends ConfigSection{
         public CombatLogging() {

@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class BeansUtilsClient implements ClientModInitializer {
     public static boolean isInCombat = false;
+    public static boolean receivedHandshake = false;
 
     public static BeansUtilsClientConfig CLIENT_CONFIG = ConfigApiJava.registerAndLoadConfig(BeansUtilsClientConfig::new, RegisterType.CLIENT);
 
@@ -17,7 +18,11 @@ public class BeansUtilsClient implements ClientModInitializer {
     public void onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(HandshakePayload.HandshakeS2CPayload.ID, ((handshakeS2CPayload, context) -> {
             BeansUtils.LOGGER.info("Received Server Payload");
-
+            if (CLIENT_CONFIG.rejectHandshake) {
+                BeansUtils.LOGGER.info("Rejecting Handshake");
+                return;
+            }
+            receivedHandshake = true;
             HandshakePayload.returnHandshake();
         }));
         ClientPlayNetworking.registerGlobalReceiver(CombatPayload.CombatS2CPayload.ID, ((combatS2CPayload, context) -> {
@@ -25,6 +30,6 @@ public class BeansUtilsClient implements ClientModInitializer {
             BeansUtils.LOGGER.info("Received combat packet: {}", isInCombat);
         }));
 
-        BeansUtils.LOGGER.info("BeansUtils Common initialized ({})", BeansUtils.MOD_VERSION);
+        BeansUtils.LOGGER.info("BeansUtils Client initialized ({})", BeansUtils.MOD_VERSION);
     }
 }

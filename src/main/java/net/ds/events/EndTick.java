@@ -1,5 +1,6 @@
 package net.ds.events;
 
+import net.ds.BeansUtils;
 import net.ds.combatLog.func.CombatTick;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
@@ -10,5 +11,7 @@ public class EndTick implements ServerTickEvents.EndTick{
     @Override
     public void onEndTick(MinecraftServer server) {
         CombatTick.CombatTick(server);
+
+        BeansUtils.handshakeServerTick(server);
     }
 }
