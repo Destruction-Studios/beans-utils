@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-@Version(version = 4)
+@Version(version = 5)
 public class BeansUtilsServerConfig extends Config {
     public BeansUtilsServerConfig() {
         super(Identifier.of(BeansUtils.MOD_ID, "server_config"));
@@ -41,12 +41,12 @@ public class BeansUtilsServerConfig extends Config {
     public static class FeatureToggling extends ConfigSection {
         public FeatureToggling() {super();}
 
-        @Comment("Whether or not Nether Portals can be used.")
-        public boolean netherPortalsEnabled = true;
-        @Comment("Whether or not End Portals can be used.")
-        public boolean endPortalsEnabled = true;
-        @Comment("Whether or not Eyes of Ender can be used.")
-        public boolean eyesOfEnderEnabled = true;
+        @Comment("Whether or not Nether Portals are disabled.")
+        public boolean netherPortalsDisabled = false;
+        @Comment("Whether or not End Portals are disabled.")
+        public boolean endPortalsDisabled = false;
+        @Comment("Whether or not Eyes of Ender are disabled.")
+        public boolean eyesOfEnderDisabled = false;
     }
 
     public static class CombatLogging extends ConfigSection{
