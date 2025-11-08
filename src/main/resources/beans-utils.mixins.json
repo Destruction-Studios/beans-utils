@@ -3,15 +3,15 @@
   "package": "net.ds.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "items.EnderPearlMixin",
+    "item.EnderPearlMixin",
     "block.EndPortalBlockMixin",
     "EntityMixin",
-    "items.EyeOfEnderMixin",
-    "items.FireworkRocketItemMixin",
+    "item.EyeOfEnderMixin",
+    "item.FireworkRocketItemMixin",
     "LivingEntityMixin",
     "block.NetherPortalBlockMixin",
     "server.ServerPlayerEntityMixin",
-    "items.TridentItemMixin"
+    "item.TridentItemMixin"
   ],
   "client": [
     "client.LeaveButtonMixin",

@@ -1,4 +1,4 @@
-package net.ds.mixin.items;
+package net.ds.mixin.item;
 
 import net.ds.BeansUtils;
 import net.ds.combatLog.CombatData;
