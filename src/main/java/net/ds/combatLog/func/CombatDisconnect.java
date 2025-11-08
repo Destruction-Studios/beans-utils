@@ -15,7 +15,7 @@ import java.lang.ref.Reference;
 public class CombatDisconnect {
     public static void OnPlayerDisconnect(ServerPlayerEntity playerEntity) {
         if (CombatData.isInCombat((IEntityDataSaver) playerEntity)) {
-            if (!BeansUtils.SERVER_CONFIG.combatLogging.killPlayerUponCombatLogging) {
+            if (!BeansUtils.SERVER_CONFIG.killPlayerUponCombatLogging) {
                 return;
             }
 

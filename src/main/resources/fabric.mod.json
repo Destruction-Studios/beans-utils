@@ -33,5 +33,10 @@
 		"java": ">=21",
 		"fabric-api": "*",
 		"fzzy_config": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"update_checker": true
+		}
 	}
 }

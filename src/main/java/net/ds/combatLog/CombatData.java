@@ -21,7 +21,7 @@ public class CombatData {
 
     public static void startCombat(IEntityDataSaver player) {
         NbtCompound nbt = player.getPersistentData();
-        nbt.putInt(COMBAT_TIME, BeansUtils.SERVER_CONFIG.combatLogging.combatDuration.get() * 20);
+        nbt.putInt(COMBAT_TIME, BeansUtils.SERVER_CONFIG.combatDuration.get() * 20);
         nbt.putBoolean(IN_COMBAT, true);
     }
 

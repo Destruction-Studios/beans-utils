@@ -23,7 +23,6 @@ public class CombatPayload {
 
     public static void sendEnterCombat(ServerPlayerEntity player) {
         if (BeansUtils.doesPlayerHaveMod(player.getUuid())) {
-            BeansUtils.LOGGER.info("Telling player to enter combat");
             CombatS2CPayload payload = new CombatS2CPayload(true);
 
             ServerPlayNetworking.send(player, payload);
@@ -32,7 +31,6 @@ public class CombatPayload {
 
     public static void sendLeaveCombat(ServerPlayerEntity player) {
         if (BeansUtils.doesPlayerHaveMod(player.getUuid())) {
-            BeansUtils.LOGGER.info("Telling player to leave combat");
             CombatS2CPayload payload = new CombatS2CPayload(false);
 
             ServerPlayNetworking.send(player, payload);

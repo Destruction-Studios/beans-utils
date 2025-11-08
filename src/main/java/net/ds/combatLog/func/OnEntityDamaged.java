@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 
 public class OnEntityDamaged {
     public static void CheckCombat(Entity entity) {
-        if (!BeansUtils.SERVER_CONFIG.combatLogging.combatTaggingEnabled) {
+        if (!BeansUtils.SERVER_CONFIG.combatTaggingEnabled) {
             return;
         }
         LivingEntity target = (LivingEntity) entity;
@@ -23,7 +23,7 @@ public class OnEntityDamaged {
 
         if (target instanceof PlayerEntity) {
             Identifier attackerIdentifier = Registries.ENTITY_TYPE.getId(attacker.getType());
-            if (!BeansUtils.SERVER_CONFIG.combatLogging.combatTriggeringEntities.containsKey(attackerIdentifier)) {
+            if (!BeansUtils.SERVER_CONFIG.combatTriggeringEntities.containsKey(attackerIdentifier)) {
                 return;
             }
             CombatData.startCombat((IEntityDataSaver) target);
