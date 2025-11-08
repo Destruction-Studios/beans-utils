@@ -1,6 +1,9 @@
 package net.ds;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
@@ -12,6 +15,17 @@ public class Utils {
 
     public static boolean isResourcePackUrlOverrideSet () {
         return BeansUtils.SERVER_CONFIG.resourcePackSettings.useCustomResourcePack && !Objects.equals(BeansUtils.SERVER_CONFIG.resourcePackSettings.serverResourcePackURL, "");
+    }
+
+    public static String getSha1FromFile(File file) {
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            String sha1 = DigestUtils.sha1Hex(fis);
+            fis.close();
+            return sha1;
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     public static File getOrCreateHashFile() {

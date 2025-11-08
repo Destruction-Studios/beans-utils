@@ -10,14 +10,16 @@
     "items.FireworkRocketItemMixin",
     "LivingEntityMixin",
     "block.NetherPortalBlockMixin",
-    "ServerPlayerEntityMixin",
+    "server.ServerPlayerEntityMixin",
     "items.TridentItemMixin"
   ],
   "client": [
-    "LeaveButtonMixin"
+    "client.LeaveButtonMixin",
+    "client.ClientCommonNetworkHandlerMixin",
+    "client.ZipResourcePackMixin"
   ],
   "server": [
-    "ResourcePackMixin"
+    "server.ResourcePackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

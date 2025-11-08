@@ -1,0 +1,6 @@
+accessWidener v2 named
+
+accessible method net/minecraft/resource/ZipResourcePack <init> (Lnet/minecraft/resource/ResourcePackInfo;Lnet/minecraft/resource/ZipResourcePack$ZipFileWrapper;Ljava/lang/String;)V
+accessible class net/minecraft/resource/ZipResourcePack$ZipFileWrapper
+accessible method net/minecraft/resource/ZipResourcePack$ZipFileWrapper <init> (Ljava/io/File;)V
+accessible field net/minecraft/resource/ZipResourcePack$ZipFileWrapper file Ljava/io/File;

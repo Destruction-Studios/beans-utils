@@ -1,4 +1,4 @@
-package net.ds.mixin;
+package net.ds.mixin.server;
 
 import net.ds.BeansUtils;
 import net.ds.Utils;

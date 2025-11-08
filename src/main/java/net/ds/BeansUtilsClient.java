@@ -18,7 +18,7 @@ public class BeansUtilsClient implements ClientModInitializer {
     public void onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(HandshakePayload.HandshakeS2CPayload.ID, ((handshakeS2CPayload, context) -> {
             BeansUtils.LOGGER.info("Received Server Payload");
-            if (CLIENT_CONFIG.rejectHandshake) {
+            if (CLIENT_CONFIG.debug.rejectHandshake) {
                 BeansUtils.LOGGER.info("Rejecting Handshake");
                 return;
             }
