@@ -8,11 +8,13 @@ import net.ds.events.ServerStopping;
 import net.ds.network.CombatPayload;
 import net.ds.network.HandshakePayload;
 import net.ds.network.SetHashPayload;
+import net.ds.petRespawning.func.GoldenAppleUsed;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,6 +26,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -76,6 +79,7 @@ public class BeansUtils implements ModInitializer {
     private static void registerEvents() {
         ServerTickEvents.END_SERVER_TICK.register(EndTick.INSTANCE);
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping.INSTANCE);
+        UseEntityCallback.EVENT.register(GoldenAppleUsed::onGoldenAppleUsed);
         ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer -> {
             SERVER = minecraftServer;
         }));

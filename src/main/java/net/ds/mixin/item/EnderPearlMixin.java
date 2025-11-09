@@ -2,7 +2,7 @@ package net.ds.mixin.item;
 
 import net.ds.BeansUtils;
 import net.ds.combatLog.CombatData;
-import net.ds.combatLog.IEntityDataSaver;
+import net.ds.interfaces.IEntityDataSaver;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EnderPearlItem;
 import net.minecraft.util.ActionResult;

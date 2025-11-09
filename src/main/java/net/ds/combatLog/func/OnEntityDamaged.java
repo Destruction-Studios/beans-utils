@@ -2,7 +2,7 @@ package net.ds.combatLog.func;
 
 import net.ds.BeansUtils;
 import net.ds.combatLog.CombatData;
-import net.ds.combatLog.IEntityDataSaver;
+import net.ds.interfaces.IEntityDataSaver;
 import net.ds.network.CombatPayload;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;

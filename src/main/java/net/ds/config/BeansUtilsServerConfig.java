@@ -81,6 +81,22 @@ public class BeansUtilsServerConfig extends Config {
     @Comment("Features disabled while a player is in combat.")
     public CombatDisabledFeatures combatDisabledFeatures = new CombatDisabledFeatures();
 
+    public ConfigGroup respawningPetsGroup = new ConfigGroup("respawningPets");
+
+    @Comment("Respawning pets enabled")
+    public boolean respawningPets = false;
+    @Comment("How long it takes a pet to respawn. (seconds)")
+    public ValidatedInt petRespawnLength = new ValidatedInt(600, 600, 1);
+    @Comment("Item used to mark a pet as respawnable.")
+    public ValidatedIdentifier respawnItem = ValidatedIdentifier.ofRegistry(Identifier.of("golden_apple"), Registries.ITEM);
+    @Comment("Entities that can be respawned.")
+    @ConfigGroup.Pop
+    public ValidatedIdentifierMap<Boolean> respawnableEntities = new ValidatedIdentifierMap<>(
+            Map.of(Identifier.of("wolf"), true),
+            ValidatedIdentifier.ofRegistry(Identifier.of("wolf"), Registries.ENTITY_TYPE),
+            new ValidatedBoolean(true)
+    );
+
     public static class ResourcePackSettings extends ConfigSection{
         public ResourcePackSettings() {super();}
 

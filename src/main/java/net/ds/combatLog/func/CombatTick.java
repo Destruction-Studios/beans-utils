@@ -1,9 +1,8 @@
 package net.ds.combatLog.func;
 
 import net.ds.combatLog.CombatData;
-import net.ds.combatLog.IEntityDataSaver;
+import net.ds.interfaces.IEntityDataSaver;
 import net.ds.network.CombatPayload;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
