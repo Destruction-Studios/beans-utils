@@ -2,6 +2,7 @@ package net.ds.mixin.server;
 
 import net.ds.BeansUtils;
 import net.ds.Utils;
+import net.ds.config.ModServerConfig;
 import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,7 +42,7 @@ public class ResourcePackMixin {
     public void getResourceURL(CallbackInfoReturnable<String> cir) {
         if (Utils.isResourcePackUrlOverrideSet()) {
             BeansUtils.LOGGER.info("Custom resource pack found");
-            cir.setReturnValue(BeansUtils.SERVER_CONFIG.resourcePackSettings.serverResourcePackURL);
+            cir.setReturnValue(ModServerConfig.INSTANCE.getCustomResourcePackURL());
         }
     }
 }

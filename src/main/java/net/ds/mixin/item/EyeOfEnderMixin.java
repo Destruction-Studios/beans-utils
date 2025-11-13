@@ -1,6 +1,6 @@
 package net.ds.mixin.item;
 
-import net.ds.BeansUtils;
+import net.ds.config.ModServerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EnderEyeItem;
 import net.minecraft.item.ItemUsageContext;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EyeOfEnderMixin {
     @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
     public void injectUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir) {
-        if (BeansUtils.SERVER_CONFIG.eyesOfEnderDisabled) {
+        if (ModServerConfig.INSTANCE.getEyesOfEnderDisabled()) {
             cir.setReturnValue(ActionResult.PASS);
             cir.cancel();
         }
@@ -24,7 +24,7 @@ public class EyeOfEnderMixin {
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     public void injectUse(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (BeansUtils.SERVER_CONFIG.eyesOfEnderDisabled) {
+        if (ModServerConfig.INSTANCE.getEyesOfEnderDisabled()) {
             cir.setReturnValue(ActionResult.PASS);
             cir.cancel();
         }

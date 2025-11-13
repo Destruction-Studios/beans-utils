@@ -1,9 +1,7 @@
 package net.ds.combatLog.func;
 
 import net.ds.Utils;
-import net.ds.network.CombatPayload;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;

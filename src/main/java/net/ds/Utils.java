@@ -1,5 +1,6 @@
 package net.ds;
 
+import net.ds.config.ModServerConfig;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
@@ -14,7 +15,7 @@ public class Utils {
     }
 
     public static boolean isResourcePackUrlOverrideSet () {
-        return BeansUtils.SERVER_CONFIG.resourcePackSettings.useCustomResourcePack && !Objects.equals(BeansUtils.SERVER_CONFIG.resourcePackSettings.serverResourcePackURL, "");
+        return ModServerConfig.INSTANCE.getUseCustomResourcePack() && !Objects.equals(ModServerConfig.INSTANCE.getCustomResourcePackURL(), "");
     }
 
     public static String getSha1FromFile(File file) {

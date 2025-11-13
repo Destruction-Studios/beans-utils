@@ -1,6 +1,6 @@
 package net.ds.combatLog;
 
-import net.ds.BeansUtils;
+import net.ds.config.ModServerConfig;
 import net.ds.interfaces.IEntityDataSaver;
 import net.minecraft.nbt.NbtCompound;
 
@@ -21,7 +21,7 @@ public class CombatData {
 
     public static void startCombat(IEntityDataSaver player) {
         NbtCompound nbt = player.beans_utils$persistentCombatData();
-        nbt.putInt(COMBAT_TIME, BeansUtils.SERVER_CONFIG.combatDuration.get() * 20);
+        nbt.putInt(COMBAT_TIME, ModServerConfig.INSTANCE.getCombatDuration() * 20);
         nbt.putBoolean(IN_COMBAT, true);
     }
 
