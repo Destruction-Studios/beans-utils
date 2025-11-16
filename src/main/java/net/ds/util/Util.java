@@ -90,7 +90,7 @@ public class Util {
             if (isResourcePackUrlOverrideSet()) {
                 url = ModServerConfig.INSTANCE.getCustomResourcePackURL();
             }
-            Text prompt = Text.of("Reloading resource packs..");
+            Text prompt = Text.of("New Resource Pack People!!");
             for (var player : context.getSource().getServer().getPlayerManager().getPlayerList()) {
                 player.networkHandler.sendPacket(new ResourcePackSendS2CPacket(props.get().id(), url, props.get().hash(), true, Optional.of(prompt)));
             }
