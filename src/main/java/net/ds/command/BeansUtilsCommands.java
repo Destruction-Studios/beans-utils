@@ -37,9 +37,13 @@ public class BeansUtilsCommands {
                                             builder.suggest(f);
                                         }
                                         return builder.buildFuture();
-                                    }))
-                            .then(argument("value", BoolArgumentType.bool()))
-                            .executes(BeansUtilsCommands::setVanillaFeature)
+                                    })
+                                    .then(argument("value", BoolArgumentType.bool())
+                                            .executes(BeansUtilsCommands::setVanillaFeature)
+                                    )
+
+                            )
+
                     )
             );
         }
