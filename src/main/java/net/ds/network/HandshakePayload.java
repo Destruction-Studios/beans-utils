@@ -44,6 +44,9 @@ public class HandshakePayload {
 
         ServerPlayNetworking.send(player, payload);
         BeansUtils.waitingForResponse.put(player.getUuid(), ModServerConfig.INSTANCE.getHandshakeTimeout());
+//        ServerTick.INSTANCE.addDelayedRunnable(new DelayedRunnable(ModServerConfig.INSTANCE.getHandshakeTimeout(), () -> {
+//
+//        }));
     }
 
     public static void returnHandshake() {

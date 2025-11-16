@@ -6,7 +6,6 @@ import net.ds.events.EndTick;
 import net.ds.events.ServerStopping;
 import net.ds.network.CombatPayload;
 import net.ds.network.HandshakePayload;
-import net.ds.network.SetHashPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -36,6 +35,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BeansUtils implements ModInitializer {
+    public static boolean MOD_ENABLED = true;
     public static final String MOD_ID = "beans-utils";
     public static final String MOD_VERSION = FabricLoader.getInstance()
             .getModContainer(MOD_ID).map(
@@ -54,8 +54,6 @@ public class BeansUtils implements ModInitializer {
         registerEvents();
 
         CommandRegistrationCallback.EVENT.register(BeansUtilsCommands::registerCommands);
-
-        Utils.getOrCreateHashFile();
 
         LOGGER.info("BeansUtils Common initialized ({})", MOD_VERSION);
     }
@@ -85,61 +83,9 @@ public class BeansUtils implements ModInitializer {
         PayloadTypeRegistry.playC2S().register(HandshakePayload.HandshakeC2SPayload.ID, HandshakePayload.HandshakeC2SPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(HandshakePayload.HandshakeS2CPayload.ID, HandshakePayload.HandshakeS2CPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(CombatPayload.CombatS2CPayload.ID, CombatPayload.CombatS2CPayload.CODEC);
-        PayloadTypeRegistry.playC2S().register(SetHashPayload.SetHashC2SPayload.ID, SetHashPayload.SetHashC2SPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(HandshakePayload.HandshakeC2SPayload.ID, (BeansUtils::playerHandshakeRespond));
-        ServerPlayNetworking.registerGlobalReceiver(SetHashPayload.SetHashC2SPayload.ID, (setHashC2SPayload, context) -> {
-            return;
-        });
     }
-
-//    public static void setHashC2S(SetHashPayload.SetHashC2SPayload payload, ServerPlayNetworking.Context context) {
-//        ServerPlayerEntity player = context.player();
-//        if (!player.hasPermissionLevel(4)) {
-//            return;
-//        }
-//            try {
-//                if (Objects.equals(SERVER_CONFIG.resourcePackSettings.serverResourcePackURL, "")) {
-//                    BeansUtils.LOGGER.warn("No custom url set");
-//                    player.sendMessage(Text.literal("No custom url set").withColor(Colors.RED));
-//                    return;
-//                }
-//                String url = SERVER_CONFIG.resourcePackSettings.serverResourcePackURL;
-//                player.sendMessage(Text.literal("Downloading: " + url).withColor(Colors.BLUE));
-//                BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream());
-//                MessageDigest digest = MessageDigest.getInstance("SHA-1");
-//                DigestInputStream digestInputStream = new DigestInputStream(inputStream, digest);
-//                while (digestInputStream.read() != -1) {
-//                }
-//                digestInputStream.close();
-//                BeansUtils.LOGGER.info("D");
-//
-//                BeansUtils.LOGGER.info("Resource pack downloaded, calculating hash");
-//                byte[] hash = digest.digest();
-//                StringBuilder hexString = new StringBuilder();
-//
-//                for (byte b : hash) {
-//                    hexString.append(String.format("%02x", b));
-//                }
-//
-//                String hashFinal = hexString.toString().toLowerCase(Locale.ROOT);
-//                File hashFile = Utils.getOrCreateHashFile();
-//
-//                FileWriter writer = new FileWriter(hashFile);
-//                writer.write(hashFinal);
-//                writer.close();
-//
-//                player.sendMessage(Text.literal("Successfully fetched hash: " + hashFinal).withColor(Colors.GREEN));
-//            } catch (NoSuchElementException e) {
-//                BeansUtils.LOGGER.error("Could not get resource pack url: {}", String.valueOf(e));
-//            } catch (MalformedURLException e) {
-//                BeansUtils.LOGGER.error("Invalid resource pack url: {}", String.valueOf(e));
-//            } catch (IOException e) {
-//                BeansUtils.LOGGER.error("IOException: {}", String.valueOf(e));
-//            } catch (NoSuchAlgorithmException e) {
-//                BeansUtils.LOGGER.error("Invalid alg: {}", String.valueOf(e));
-//            }
-//    }
 
     public static void handshakeServerTick(MinecraftServer server) {
         waitingForResponse.replaceAll((uuid, ticks) -> ticks - 1);

@@ -22,7 +22,7 @@ public class ModServerConfig {
     static class ModSettings {
         boolean requireMod = false;
         String kickMessage = "This server requires BeansUtils.";
-        int handshakeTimeout = 200;
+        int handshakeTimeout = 3;
     }
 
     Server server = new Server();
@@ -33,6 +33,7 @@ public class ModServerConfig {
         static class ResourcePackSettings {
             boolean useCustomResourcePack = false;
             String customResourcePackURL = "";
+            String customHash = "";
         }
     }
 
@@ -66,7 +67,7 @@ public class ModServerConfig {
     public String getKickMessage() { return modSettings.kickMessage; }
     public void setKickMessage(String value) { modSettings.kickMessage = value; }
 
-    public int getHandshakeTimeout() { return modSettings.handshakeTimeout; }
+    public int getHandshakeTimeout() { return modSettings.handshakeTimeout * 20; }
     public void setHandshakeTimeout(int value) { modSettings.handshakeTimeout = value; }
 
     // ===== Server =====
@@ -78,6 +79,9 @@ public class ModServerConfig {
 
     public String getCustomResourcePackURL() { return server.resourcePackSettings.customResourcePackURL; }
     public void setCustomResourcePackURL(String value) { server.resourcePackSettings.customResourcePackURL = value; }
+
+    public String getCustomHash() { return server.resourcePackSettings.customHash; }
+    public void setCustomHash(String value) { server.resourcePackSettings.customHash = value; }
 
     // ===== VanillaFeatures =====
     public boolean getNetherPortalsDisabled() { return vanillaFeaturesToggling.netherPortalsDisabled; }

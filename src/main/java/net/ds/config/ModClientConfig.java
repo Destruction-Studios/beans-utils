@@ -19,6 +19,7 @@ public class ModClientConfig {
 
     Server server = new Server();
     static class Server {
+        boolean sendConnectToast = true;
         boolean dontReloadResources = false;
     }
 
@@ -38,6 +39,9 @@ public class ModClientConfig {
     public void setDontReloadResources(Boolean value) {
         this.server.dontReloadResources = value;
     }
+
+    public boolean getSendServerConnectToast() { return this.server.sendConnectToast ; }
+    public void setSendServerConnectToast(Boolean value) { this.server.sendConnectToast = value; }
 
     public boolean getPreventLeaving() {
         return this.combatTagging.preventLeavingInCombat;

@@ -1,7 +1,7 @@
 package net.ds.mixin.client;
 
 import net.ds.BeansUtils;
-import net.ds.Utils;
+import net.ds.util.Util;
 import net.ds.config.ModClientConfig;
 import net.ds.interfaces.FilePackResource;
 import net.minecraft.client.MinecraftClient;
@@ -45,7 +45,7 @@ public class ClientCommonNetworkHandlerMixin {
                if (file == null) {
                    continue;
                }
-               String packSha1 = Utils.getSha1FromFile(file);
+               String packSha1 = Util.getSha1FromFile(file);
                if(packSha1.equals(packet.hash())) {
                    BeansUtils.LOGGER.info("Ignoring server resource pack.");
                    sendSuccessful(packet);
