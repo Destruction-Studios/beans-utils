@@ -1,19 +1,18 @@
 package net.ds.combatLog.func;
 
-import net.ds.BeansUtils;
 import net.ds.combatLog.CombatData;
-import net.ds.combatLog.IEntityDataSaver;
+import net.ds.config.ModServerConfig;
+import net.ds.interfaces.IEntityDataSaver;
 import net.ds.network.CombatPayload;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 public class OnEntityDamaged {
     public static void CheckCombat(Entity entity) {
-        if (!BeansUtils.SERVER_CONFIG.combatTaggingEnabled) {
+        if (!ModServerConfig.INSTANCE.getCombatTaggingEnabled()) {
             return;
         }
         LivingEntity target = (LivingEntity) entity;
@@ -22,8 +21,8 @@ public class OnEntityDamaged {
         if (attacker == null) return;
 
         if (target instanceof PlayerEntity) {
-            Identifier attackerIdentifier = Registries.ENTITY_TYPE.getId(attacker.getType());
-            if (!BeansUtils.SERVER_CONFIG.combatTriggeringEntities.containsKey(attackerIdentifier)) {
+            String attackerIdentifier = Registries.ENTITY_TYPE.getId(attacker.getType()).toString();
+            if (!ModServerConfig.INSTANCE.getCombatTriggeringEntities().contains(attackerIdentifier)) {
                 return;
             }
             CombatData.startCombat((IEntityDataSaver) target);

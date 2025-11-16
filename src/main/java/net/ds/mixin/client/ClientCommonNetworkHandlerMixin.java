@@ -1,8 +1,8 @@
 package net.ds.mixin.client;
 
 import net.ds.BeansUtils;
-import net.ds.BeansUtilsClient;
-import net.ds.Utils;
+import net.ds.util.Util;
+import net.ds.config.ModClientConfig;
 import net.ds.interfaces.FilePackResource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommonNetworkHandler;
@@ -30,7 +30,7 @@ public class ClientCommonNetworkHandlerMixin {
 
     @Inject(method = "onResourcePackSend", at = @At("HEAD"), cancellable = true)
     private void onResourcePackSendInject(ResourcePackSendS2CPacket packet, CallbackInfo ci) {
-        if (!BeansUtilsClient.CLIENT_CONFIG.noResourcePackReload) {
+        if (!ModClientConfig.INSTANCE.getDontReloadResources()) {
             return;
         }
         if (packet.hash().isBlank()) {
@@ -45,7 +45,7 @@ public class ClientCommonNetworkHandlerMixin {
                if (file == null) {
                    continue;
                }
-               String packSha1 = Utils.getSha1FromFile(file);
+               String packSha1 = Util.getSha1FromFile(file);
                if(packSha1.equals(packet.hash())) {
                    BeansUtils.LOGGER.info("Ignoring server resource pack.");
                    sendSuccessful(packet);

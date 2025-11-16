@@ -1,6 +1,7 @@
 package net.ds.mixin.client;
 
 import net.ds.BeansUtilsClient;
+import net.ds.config.ModClientConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -17,8 +18,8 @@ public class LeaveButtonMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void renderMixin(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (this.exitButton != null) {
-            this.exitButton.active = !BeansUtilsClient.CLIENT_CONFIG.preventLeavingWhenInCombat || !BeansUtilsClient.isInCombat;
+        if (this.exitButton != null && ModClientConfig.INSTANCE.getPreventLeaving()) {
+            this.exitButton.active = !BeansUtilsClient.isInCombat;
         }
     }
 }

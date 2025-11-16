@@ -1,6 +1,6 @@
 package net.ds.mixin.block;
 
-import net.ds.BeansUtils;
+import net.ds.config.ModServerConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.entity.Entity;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class NetherPortalBlockMixin {
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
     public void injectOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl, CallbackInfo ci) {
-        if (BeansUtils.SERVER_CONFIG.netherPortalsDisabled) {
+        if (ModServerConfig.INSTANCE.getNetherPortalsDisabled()) {
             ci.cancel();
         }
     }
