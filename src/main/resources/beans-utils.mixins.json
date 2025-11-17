@@ -8,7 +8,8 @@
     "item.FireworkRocketItemMixin",
     "item.TridentItemMixin",
     "pets.CatMixin",
-    "pets.WolfMixin"
+    "pets.WolfMixin",
+    "EntityMixin"
   ],
   "client": [
     "client.ClientCommonNetworkHandlerMixin",
@@ -16,7 +17,7 @@
     "client.ZipResourcePackMixin"
   ],
   "server": [
-    "EntityMixin",
+
     "LivingEntityMixin",
     "block.EndPortalBlockMixin",
     "block.NetherPortalBlockMixin",

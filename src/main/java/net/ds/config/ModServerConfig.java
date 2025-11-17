@@ -44,6 +44,12 @@ public class ModServerConfig {
         boolean eyesOfEnderDisabled = false;
     }
 
+    PetRespawning petRespawning = new PetRespawning();
+    static class PetRespawning {
+        boolean petRespawningEnabled = false;
+        int respawnDelay = 120;
+    }
+
     CombatTagging combatTagging = new CombatTagging();
     static class CombatTagging {
         boolean combatTaggingEnabled = false;
@@ -99,6 +105,13 @@ public class ModServerConfig {
 
     public boolean getEyesOfEnderDisabled() { return vanillaFeaturesToggling.eyesOfEnderDisabled; }
     public void setEyesOfEnderDisabled(boolean value) { vanillaFeaturesToggling.eyesOfEnderDisabled = value; }
+
+    // ===== Pets =====
+    public boolean getPetRespawningEnabled() { return petRespawning.petRespawningEnabled; }
+    public void setPetRespawningEnabled(boolean value) { petRespawning.petRespawningEnabled = value; }
+
+    public int getRespawnDelay() { return petRespawning.respawnDelay * 20; }
+    public void setRespawnDelay(int value) { petRespawning.respawnDelay = value; }
 
     // ===== CombatTagging =====
     public boolean getCombatTaggingEnabled() { return combatTagging.combatTaggingEnabled; }

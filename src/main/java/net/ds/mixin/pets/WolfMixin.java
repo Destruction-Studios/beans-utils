@@ -6,14 +6,20 @@ import net.ds.petRespawning.PetManager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.entity.passive.WolfSoundVariant;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,6 +28,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WolfEntity.class)
 public abstract class WolfMixin implements IPetDataSaver {
+    @Shadow public abstract DyeColor getCollarColor();
+
+    @Shadow protected abstract RegistryEntry<WolfSoundVariant> getSoundVariant();
+
     @Unique
     private boolean canRespawn = false;
 
@@ -57,16 +67,17 @@ public abstract class WolfMixin implements IPetDataSaver {
         BeansUtils.LOGGER.info("WOLF DIED :(");
         WolfEntity wolf = (WolfEntity) (Object) this;
         if (!wolf.isTamed()) {
-            BeansUtils.LOGGER.info("Not tamed...");
             return;
         }
         if (!canRespawn) {
-            BeansUtils.LOGGER.info("Cant respawn :(");
             return;
         }
         LivingEntity player = wolf.getOwner();
         assert player != null;
-        BeansUtils.LOGGER.info("OWNER: {}", player.getName().getString());
+        PetManager.addRespawningPet(player, wolf, (nbtCompound -> {
+            nbtCompound.put("collar_color", DyeColor.CODEC, this.getCollarColor());
+            this.getSoundVariant().getKey().ifPresent((variant) -> nbtCompound.put("sound_variant", RegistryKey.createCodec(RegistryKeys.WOLF_SOUND_VARIANT), variant));
+        }));
     }
 
     @Inject(method = "writeCustomData", at = @At("HEAD"))
