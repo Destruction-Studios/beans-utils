@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.ds.tpa.TPACommands;
 import net.ds.util.Util;
 import net.ds.config.ModServerConfig;
 import net.minecraft.command.CommandRegistryAccess;
@@ -19,6 +20,7 @@ public class BeansUtilsCommands {
     private static final String[] FEATURES = {"netherPortalsDisabled", "endPortalsDisabled", "eyesOfEnderDisabled",};
 
     public static void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment env) {
+        TPACommands.registerTPACommands(dispatcher, registryAccess, env);
         if (env.dedicated) {
             dispatcher.register(literal("beans-utils")
                     .requires(source -> source.hasPermissionLevel(4))
@@ -49,7 +51,7 @@ public class BeansUtilsCommands {
         }
     }
 
-    private static void sendFeedback(CommandContext<ServerCommandSource> context, String message) {
+    public static void sendFeedback(CommandContext<ServerCommandSource> context, String message) {
         context.getSource().sendFeedback(() -> Text.of(message), true);
     }
 
