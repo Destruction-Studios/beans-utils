@@ -64,13 +64,12 @@ public class BeansUtils implements ModInitializer {
 
     private static void registerEvents() {
         ServerTickEvents.END_SERVER_TICK.register(EndTick.INSTANCE);
-        ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping.INSTANCE);
-        ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer -> {
-            SERVER = minecraftServer;
-        }));
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && MinecraftClient.getInstance().isInSingleplayer()) {
-            return;
-        } else {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping.INSTANCE);
+            ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer -> {
+                SERVER = minecraftServer;
+            }));
+
             ServerPlayerEvents.JOIN.register(HandshakePayload::attemptHandshake);
             ServerPlayerEvents.LEAVE.register((serverPlayerEntity -> {
                 waitingForResponse.remove(serverPlayerEntity.getUuid());

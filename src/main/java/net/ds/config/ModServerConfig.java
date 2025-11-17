@@ -59,6 +59,13 @@ public class ModServerConfig {
         }
     }
 
+    TPA tpa = new TPA();
+    static class TPA {
+        boolean tpaEnabled = false;
+        int tpaTimeout = 10;
+        int tpaExpRequirement = 2;
+    }
+
     //thx chatgpt for making these getters and setters sooo helpful!
 
     public boolean getRequireMod() { return modSettings.requireMod; }
@@ -115,6 +122,15 @@ public class ModServerConfig {
     public boolean getDisableTridents() { return combatTagging.combatDisabledFeatures.disableTridents; }
     public void setDisableTridents(boolean value) { combatTagging.combatDisabledFeatures.disableTridents = value; }
 
+    // ===== TPA =====
+    public boolean getTpaEnabled() { return tpa.tpaEnabled; }
+    public void setTpaEnabled(boolean v) { tpa.tpaEnabled = v; }
+
+    public int getTpaTimeout() { return tpa.tpaTimeout * 20; }
+    public void setTpaTimeout(int v) { tpa.tpaTimeout = v; }
+
+    public int getTpaExpRequirement() { return tpa.tpaExpRequirement; }
+    public void setTpaExpRequirement(int v) { tpa.tpaExpRequirement = v; }
 
     public void reloadConfigFile() {
         INSTANCE = load(CONFIG_FILE.toFile());

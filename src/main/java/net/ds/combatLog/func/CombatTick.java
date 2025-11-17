@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CombatTick {
-    public static void CombatTick(MinecraftServer server) {
+    public static void tick(MinecraftServer server) {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
             IEntityDataSaver data = (IEntityDataSaver) player;
 
