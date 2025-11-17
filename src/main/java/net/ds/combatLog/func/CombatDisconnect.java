@@ -3,19 +3,19 @@ package net.ds.combatLog.func;
 import net.ds.BeansUtils;
 import net.ds.combatLog.CombatData;
 import net.ds.config.ModServerConfig;
-import net.ds.interfaces.IEntityDataSaver;
+import net.ds.interfaces.IPlayerDataSaver;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class CombatDisconnect {
     public static void OnPlayerDisconnect(ServerPlayerEntity playerEntity) {
-        if (CombatData.isInCombat((IEntityDataSaver) playerEntity)) {
+        if (CombatData.isInCombat((IPlayerDataSaver) playerEntity)) {
             if (!ModServerConfig.INSTANCE.getKillPlayerUponCombatLogging()) {
                 return;
             }
 
-            CombatData.endCombat((IEntityDataSaver) playerEntity);
+            CombatData.endCombat((IPlayerDataSaver) playerEntity);
 
             DamageSource damageSource = new DamageSource(
                     playerEntity.getRegistryManager()

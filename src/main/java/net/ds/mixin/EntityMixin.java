@@ -1,8 +1,8 @@
 package net.ds.mixin;
 
 import net.ds.combatLog.CombatData;
-import net.ds.interfaces.IEntityDataSaver;
-import net.ds.petRespawning.PetData;
+import net.ds.interfaces.IPlayerDataSaver;
+import net.ds.petRespawning.PetManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.storage.ReadView;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public class EntityMixin implements IEntityDataSaver {
+public class EntityMixin implements IPlayerDataSaver {
     @Unique
     private NbtCompound persistentCombatData;
     @Unique
@@ -26,13 +26,13 @@ public class EntityMixin implements IEntityDataSaver {
             view.put(CombatData.COMBAT_LOG_NBT_KEY, NbtCompound.CODEC, persistentCombatData);
         }
         if (persistentPetData != null) {
-            view.put(PetData.PET_NBT_KEY, NbtCompound.CODEC, persistentPetData);
+            view.put(PetManager.PET_NBT_KEY, NbtCompound.CODEC, persistentPetData);
         }
     }
 
     @Inject(method="readData", at = @At("HEAD"))
     public void readDataMixin(ReadView view, CallbackInfo ci) {
-        persistentPetData = view.read(PetData.PET_NBT_KEY, NbtCompound.CODEC).orElse(null);
+        persistentPetData = view.read(PetManager.PET_NBT_KEY, NbtCompound.CODEC).orElse(null);
         persistentCombatData = view.read(CombatData.COMBAT_LOG_NBT_KEY, NbtCompound.CODEC).orElse(null);
     }
 

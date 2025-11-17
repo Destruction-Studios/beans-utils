@@ -1,7 +1,7 @@
 package net.ds.combatLog.func;
 
 import net.ds.combatLog.CombatData;
-import net.ds.interfaces.IEntityDataSaver;
+import net.ds.interfaces.IPlayerDataSaver;
 import net.ds.network.CombatPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -9,7 +9,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class CombatTick {
     public static void tick(MinecraftServer server) {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-            IEntityDataSaver data = (IEntityDataSaver) player;
+            IPlayerDataSaver data = (IPlayerDataSaver) player;
 
             if (!CombatData.isInCombat(data)) continue;
 

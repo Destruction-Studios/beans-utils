@@ -2,7 +2,7 @@ package net.ds.combatLog.func;
 
 import net.ds.combatLog.CombatData;
 import net.ds.config.ModServerConfig;
-import net.ds.interfaces.IEntityDataSaver;
+import net.ds.interfaces.IPlayerDataSaver;
 import net.ds.network.CombatPayload;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -25,11 +25,11 @@ public class OnEntityDamaged {
             if (!ModServerConfig.INSTANCE.getCombatTriggeringEntities().contains(attackerIdentifier)) {
                 return;
             }
-            CombatData.startCombat((IEntityDataSaver) target);
+            CombatData.startCombat((IPlayerDataSaver) target);
             CombatPayload.sendEnterCombat((ServerPlayerEntity) target);
 
             if (attacker instanceof PlayerEntity) {
-                CombatData.startCombat((IEntityDataSaver) attacker);
+                CombatData.startCombat((IPlayerDataSaver) attacker);
                 CombatPayload.sendEnterCombat((ServerPlayerEntity) attacker);
             }
         }

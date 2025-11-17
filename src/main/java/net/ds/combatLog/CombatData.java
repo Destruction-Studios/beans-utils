@@ -1,7 +1,7 @@
 package net.ds.combatLog;
 
 import net.ds.config.ModServerConfig;
-import net.ds.interfaces.IEntityDataSaver;
+import net.ds.interfaces.IPlayerDataSaver;
 import net.minecraft.nbt.NbtCompound;
 
 public class CombatData {
@@ -9,7 +9,7 @@ public class CombatData {
     public static final String COMBAT_TIME = "combatTime";
     public static final String IN_COMBAT = "inCombat";
 
-    public static void decreaseCombatTime(IEntityDataSaver player) {
+    public static void decreaseCombatTime(IPlayerDataSaver player) {
         NbtCompound nbt = player.beans_utils$persistentCombatData();
 
         int combatTime = nbt.getInt(COMBAT_TIME, 0);
@@ -19,24 +19,24 @@ public class CombatData {
         }
     }
 
-    public static void startCombat(IEntityDataSaver player) {
+    public static void startCombat(IPlayerDataSaver player) {
         NbtCompound nbt = player.beans_utils$persistentCombatData();
         nbt.putInt(COMBAT_TIME, ModServerConfig.INSTANCE.getCombatDuration() * 20);
         nbt.putBoolean(IN_COMBAT, true);
     }
 
-    public static void endCombat(IEntityDataSaver player) {
+    public static void endCombat(IPlayerDataSaver player) {
         NbtCompound nbt = player.beans_utils$persistentCombatData();
         nbt.putInt(COMBAT_TIME, 0);
         nbt.putBoolean(IN_COMBAT, false);
     }
 
-    public static int getCombatTime(IEntityDataSaver player) {
+    public static int getCombatTime(IPlayerDataSaver player) {
         NbtCompound nbt = player.beans_utils$persistentCombatData();
         return nbt.getInt(COMBAT_TIME, 0);
     }
 
-    public static boolean isInCombat(IEntityDataSaver player) {
+    public static boolean isInCombat(IPlayerDataSaver player) {
         NbtCompound nbt = player.beans_utils$persistentCombatData();
         return nbt.getBoolean(IN_COMBAT,false);
     }

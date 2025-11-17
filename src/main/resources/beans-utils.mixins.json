@@ -6,20 +6,22 @@
     "item.EnderPearlMixin",
     "item.EyeOfEnderMixin",
     "item.FireworkRocketItemMixin",
-    "item.TridentItemMixin"
+    "item.TridentItemMixin",
+    "pets.CatMixin",
+    "pets.WolfMixin"
   ],
   "client": [
-    "client.LeaveButtonMixin",
     "client.ClientCommonNetworkHandlerMixin",
+    "client.LeaveButtonMixin",
     "client.ZipResourcePackMixin"
   ],
   "server": [
-    "block.NetherPortalBlockMixin",
-    "block.EndPortalBlockMixin",
-    "server.ServerPlayerEntityMixin",
-    "server.ResourcePackMixin",
     "EntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "block.EndPortalBlockMixin",
+    "block.NetherPortalBlockMixin",
+    "server.ResourcePackMixin",
+    "server.ServerPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
