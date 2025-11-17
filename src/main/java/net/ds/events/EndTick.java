@@ -11,8 +11,8 @@ public class EndTick implements ServerTickEvents.EndTick{
 
     @Override
     public void onEndTick(MinecraftServer server) {
-//        CombatTick.tick(server);
+        CombatTick.tick(server);
         TPAManager.tick();
-//        BeansUtils.handshakeServerTick(server);
+        BeansUtils.handshakeServerTick(server);
     }
 }

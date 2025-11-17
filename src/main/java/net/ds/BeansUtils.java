@@ -63,8 +63,8 @@ public class BeansUtils implements ModInitializer {
     }
 
     private static void registerEvents() {
-        ServerTickEvents.END_SERVER_TICK.register(EndTick.INSTANCE);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            ServerTickEvents.END_SERVER_TICK.register(EndTick.INSTANCE);
             ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping.INSTANCE);
             ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer -> {
                 SERVER = minecraftServer;
