@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.ds.command.PlayerTPASuggestionProvider;
+import net.ds.config.ModServerConfig;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
@@ -13,25 +14,25 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.TeleportTarget;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class TPACommands {
     public static void registerTPACommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment env) {
+        if (!ModServerConfig.INSTANCE.getTpaEnabled()) {
+            return;
+        }
         TPA.register(dispatcher);
         TPAHere.register(dispatcher);
         TPAccept.register(dispatcher);
+        TPACancel.register(dispatcher);
     }
 
     private static void sendFeedback(CommandContext<ServerCommandSource> context, Text text) {
@@ -228,6 +229,36 @@ public class TPACommands {
                 sendFeedback(context, Text.literal("No TPA to accept.").formatted(Formatting.RED));
             }
 
+            return 1;
+        }
+    }
+
+    public static class TPACancel {
+        private static final String COMMAND = "tpacancel";
+
+        public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
+            dispatcher.register(literal(COMMAND)
+                    .executes(TPACancel::execute));
+        }
+
+        private static int execute(CommandContext<ServerCommandSource> context) {
+            UUID playerUUID = Objects.requireNonNull(context.getSource().getPlayer()).getUuid();
+            List<UUID> keysTPA = Collections.list(TPAManager.playerTPAMap.keys());
+            List<UUID> keysTPAHere = Collections.list(TPAManager.playerTPAHereMap.keys());
+
+            for (UUID targetUUID : keysTPA) {
+                TPAManager.playerTPAMap.get(targetUUID).remove(playerUUID);
+                if (TPAManager.playerTPAMap.get(targetUUID).isEmpty()) {
+                    TPAManager.playerTPAMap.remove(targetUUID);
+                }
+            }
+            for (UUID targetUUID : keysTPAHere) {
+                TPAManager.playerTPAHereMap.get(targetUUID).remove(playerUUID);
+                if (TPAManager.playerTPAHereMap.get(targetUUID).isEmpty()) {
+                    TPAManager.playerTPAHereMap.remove(targetUUID);
+                }
+            }
+            sendFeedback(context, Text.literal("Cancalled all TPA requests!").formatted(Formatting.YELLOW));
             return 1;
         }
     }
