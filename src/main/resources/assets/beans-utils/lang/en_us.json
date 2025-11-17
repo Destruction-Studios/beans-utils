@@ -1,4 +1,18 @@
 {
   "death.attack.combat_log.player": "%1$s combat logged.",
-  "death.attack.combat_log": "%1$s combat logged."
+  "death.attack.combat_log": "%1$s combat logged.",
+
+  "beans-utils.tpa.tp_self_error": "You can not teleport to yourself.",
+  "beans-utils.tpa.tphere_already_called": "You have already requests this player to TPAHere.",
+  "beans-utils.tpa.tpa_already_called": "You have already requested to TPA to this player.",
+  "beans-utils.tpa.tpa_request": "%s wants to teleport to you! Accept with /tpaccept or click here!",
+  "beans-utils.tpa.tpahere_request": "%s wants you to teleport to him! Accept with /tpaccept or click here!",
+  "beans-utils.tpa.tpa_sent": "TPA request sent...",
+  "beans-utils.tpa.tpahere_sent": "TPAHere request sent...",
+  "beans-utils.tpa.tpa_expire": "Your TPA request has expired.",
+  "beans-utils.tpa.tpahere_expire": "Your TPAHere request has expired.",
+  "beans-utils.tpa.tpaccept_error": "There is no TPA to accept.",
+  "beans-utils.tpa.tpa_success": "Teleported to %s!",
+  "beans-utils.tpa.tpahere_success": "Teleported %s to you!",
+  "beans-utils.tpa.tpa_cancel_success": "Canceled all TPA requests!"
 }

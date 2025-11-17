@@ -64,16 +64,16 @@ public class TPACommands {
             String targetName = targetPlayer.getName().getString();
 
             if (playerUUID == targetUUID) {
-                sendFeedback(context, Text.literal("You can not teleport to yourself.").formatted(Formatting.RED));
+                sendFeedback(context, Text.translatable("beans-utils.tpa.tp_self_error").formatted(Formatting.RED));
                 return 1;
             }
             if (TPAManager.playerTPAHereMap.containsKey(targetUUID) && TPAManager.playerTPAHereMap.get(playerUUID).contains(playerUUID)) {
-                sendFeedback(context, Text.literal("You have already requested this player to TPAHere to you.").formatted(Formatting.RED));
+                sendFeedback(context, Text.translatable("beans-utils.tpa.tphere_already_called").formatted(Formatting.RED));
                 return 1;
             }
             if (TPAManager.playerTPAMap.containsKey(targetUUID)) {
                 if (TPAManager.playerTPAMap.get(playerUUID).contains(playerUUID)) {
-                    sendFeedback(context, Text.literal("You have already requested to TPA to this player.").formatted(Formatting.RED));
+                    sendFeedback(context, Text.translatable("beans-utils.tpa.tpa_already_called").formatted(Formatting.RED));
                     return 1;
                 }
 
@@ -83,12 +83,12 @@ public class TPACommands {
                 uuidList.add(playerUUID);
                 TPAManager.playerTPAMap.put(targetUUID, uuidList);
             }
-            targetPlayer.sendMessage(Text.literal(String.format("%s wants to teleport to you! Accept with /tpaccept or click here!", playerName))
+            targetPlayer.sendMessage(Text.translatable("beans-utils.tpa.tpa_request", playerName)
                     .formatted(Formatting.GOLD)
                     .styled(style -> style.withClickEvent(new ClickEvent.RunCommand("/tpaccept " + playerName)))
             );
             sendSound(player, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE);
-            sendFeedback(context, Text.literal("TPA request send!").withColor(Colors.GREEN));
+            sendFeedback(context, Text.translatable("beans-utils.tpa.tpa_sent").withColor(Colors.GREEN));
 
             TPAManager.addRunnable(() -> {
                 if (TPAManager.playerTPAMap.containsKey(targetUUID)) {
@@ -97,7 +97,7 @@ public class TPACommands {
                         if (TPAManager.playerTPAMap.get(targetUUID).isEmpty()) {
                             TPAManager.playerTPAMap.remove(targetUUID);
                         }
-                        sendFeedback(context, Text.literal("Your TPA request has expired.").formatted(Formatting.RED));
+                        sendFeedback(context, Text.translatable("beans-utils.tpa.tpa_expire").formatted(Formatting.RED));
                         sendSound(player, SoundEvents.ENTITY_VILLAGER_NO);
                     }
                 }
@@ -129,16 +129,16 @@ public class TPACommands {
             String targetName = targetPlayer.getName().getString();
 
             if (playerUUID == targetUUID) {
-                sendFeedback(context, Text.literal("You can not teleport to yourself.").formatted(Formatting.RED));
+                sendFeedback(context, Text.translatable("beans-utils.tpa.tp_self_error").formatted(Formatting.RED));
                 return 1;
             }
             if (TPAManager.playerTPAMap.containsKey(targetUUID) && TPAManager.playerTPAMap.get(targetUUID).contains(playerUUID)) {
-                sendFeedback(context, Text.literal("You have already requested this player to TPA to you.").formatted(Formatting.RED));
+                sendFeedback(context, Text.translatable("beans-utils.tpa.tpa_already_called").formatted(Formatting.RED));
                 return 1;
             }
             if (TPAManager.playerTPAHereMap.containsKey(targetUUID)) {
                 if (TPAManager.playerTPAHereMap.get(targetUUID).contains(playerUUID)) {
-                    sendFeedback(context, Text.literal("You have already requested this player to TPAHere to you.").formatted(Formatting.RED));
+                    sendFeedback(context, Text.translatable("beans-utils.tpa.tpahere_already_called").formatted(Formatting.RED));
                     return 1;
                 }
                 TPAManager.playerTPAHereMap.get(targetUUID).add(playerUUID);
@@ -148,12 +148,12 @@ public class TPACommands {
                 TPAManager.playerTPAHereMap.put(targetUUID, uuidList);
             }
 
-            targetPlayer.sendMessage(Text.literal(String.format("%s wants you to teleport to him! Accept with /tpaccept or click here!", playerName))
+            targetPlayer.sendMessage(Text.translatable("beans-utils.tpa.tpahere_request", playerName)
                     .formatted(Formatting.GOLD)
                     .styled(style -> style.withClickEvent(new ClickEvent.RunCommand("/tpaccept " + playerName)))
             );
             sendSound(targetPlayer, SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE);
-            sendFeedback(context, Text.literal("TPAHere request sent!").formatted(Formatting.GREEN));
+            sendFeedback(context, Text.translatable("beans-utils.tpa.tpahere_sent").formatted(Formatting.GREEN));
 
             TPAManager.addRunnable(() -> {
                 if (TPAManager.playerTPAHereMap.containsKey(targetUUID)) {
@@ -162,7 +162,7 @@ public class TPACommands {
                         if (TPAManager.playerTPAHereMap.get(targetUUID).isEmpty()) {
                             TPAManager.playerTPAHereMap.remove(targetUUID);
                         }
-                        sendFeedback(context, Text.literal("Your TPAHere request has expired.").formatted(Formatting.RED));
+                        sendFeedback(context, Text.translatable("beans-utils.tpa.tpahere_expire").formatted(Formatting.RED));
                         sendSound(player, SoundEvents.ENTITY_VILLAGER_NO);
                     }
                 }
@@ -192,7 +192,7 @@ public class TPACommands {
 
             if (TPAManager.playerTPAMap.containsKey(player.getUuid())) {
                 if (!TPAManager.playerTPAMap.get(player.getUuid()).contains(playerUUID)) {
-                    sendFeedback(context, Text.literal("There is no TPA to accept.").formatted(Formatting.RED));
+                    sendFeedback(context, Text.translatable("beans-utils.tpa.tpaccept_error").formatted(Formatting.RED));
                     return 1;
                 }
                 UUID targetUUID = TPAManager.playerTPAMap.get(player.getUuid()).remove(TPAManager.playerTPAMap.get(player.getUuid()).indexOf(playerUUID));
@@ -209,11 +209,11 @@ public class TPACommands {
                 if (TPAManager.playerTPAMap.get(player.getUuid()).isEmpty()) {
                     TPAManager.playerTPAMap.remove(player.getUuid());
                 }
-                targetPlayer.sendMessage(Text.literal("Teleport Success!!").formatted(Formatting.GREEN));
+                targetPlayer.sendMessage(Text.translatable("beans-utils.tpa.tpa_success", targetPlayer.getName().getString()).formatted(Formatting.GREEN));
                 sendSound(targetPlayer, SoundEvents.ENTITY_ENDER_EYE_DEATH);
             } else if (TPAManager.playerTPAHereMap.containsKey(player.getUuid())) {
                 if (!TPAManager.playerTPAHereMap.get(player.getUuid()).contains(playerUUID)){
-                    sendFeedback(context, Text.literal("There is no TPA to accept").formatted(Formatting.RED));
+                    sendFeedback(context, Text.translatable("beans-utils.tpa.tpaccept_error").formatted(Formatting.RED));
                     return 1;
                 }
                 UUID targetUuid = TPAManager.playerTPAHereMap.get(player.getUuid()).remove(TPAManager.playerTPAHereMap.get(player.getUuid()).indexOf(playerUUID));
@@ -223,10 +223,10 @@ public class TPACommands {
                 if (TPAManager.playerTPAHereMap.get(player.getUuid()).isEmpty()){
                     TPAManager.playerTPAHereMap.remove(player.getUuid());
                 }
-                player.sendMessage(Text.literal("Teleport Success!!").formatted(Formatting.GREEN));
+                player.sendMessage(Text.translatable("beans-utils.tpa.tpahere_success", target_player.getName().getString()).formatted(Formatting.GREEN));
                 sendSound(player, SoundEvents.ENTITY_ENDER_EYE_DEATH);
             } else {
-                sendFeedback(context, Text.literal("No TPA to accept.").formatted(Formatting.RED));
+                sendFeedback(context, Text.translatable("beans-utils.tpa.tpaccept_error").formatted(Formatting.RED));
             }
 
             return 1;
@@ -258,7 +258,7 @@ public class TPACommands {
                     TPAManager.playerTPAHereMap.remove(targetUUID);
                 }
             }
-            sendFeedback(context, Text.literal("Cancalled all TPA requests!").formatted(Formatting.YELLOW));
+            sendFeedback(context, Text.translatable("beans-utils.tpa.tpa_cancel_success").formatted(Formatting.YELLOW));
             return 1;
         }
     }
