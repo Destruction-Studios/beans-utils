@@ -1,75 +1,80 @@
 package net.ds.config;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
 import net.ds.BeansUtils;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public class ModServerConfig {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-    public static final Path CONFIG_FILE = Path.of("config").resolve(BeansUtils.MOD_ID).resolve("server_config_v2.json");
+    public static final Path CONFIG_FILE = Path.of("config").resolve(BeansUtils.MOD_ID).resolve("server_config.json");
     public static final ModServerConfig DEFAULTS = new ModServerConfig();
     public static ModServerConfig INSTANCE = load(CONFIG_FILE.toFile());
 
-    ModSettings modSettings = new ModSettings();
+    @SerializedName("mod_settings") ModSettings modSettings = new ModSettings();
     static class ModSettings {
-        boolean requireMod = false;
-        String kickMessage = "This server requires BeansUtils.";
-        int handshakeTimeout = 3;
+        @SerializedName("require_mod") boolean requireMod = false;
+        @SerializedName("kick_message") String kickMessage = "This server requires BeansUtils.";
+        @SerializedName("handshake_timeout") int handshakeTimeout = 3;
     }
 
-    Server server = new Server();
+    @SerializedName("server") Server server = new Server();
     static class Server {
-        boolean pvpEnabled = true;
-        ResourcePackSettings resourcePackSettings = new ResourcePackSettings();
+        @SerializedName("pvp_enabled") boolean pvpEnabled = true;
+        @SerializedName("resourcepack_settings") ResourcePackSettings resourcePackSettings = new ResourcePackSettings();
 
         static class ResourcePackSettings {
-            boolean useCustomResourcePack = false;
-            String customResourcePackURL = "";
-            String customHash = "";
+            @SerializedName("use_custom_resourcepack") boolean useCustomResourcePack = false;
+            @SerializedName("custom_resourcepack_url") String customResourcePackURL = "";
+            @SerializedName("custom_hash") String customHash = "";
         }
     }
 
-    VanillaFeatures vanillaFeaturesToggling = new VanillaFeatures();
+    @SerializedName("vanilla_feature_toggling") VanillaFeatures vanillaFeaturesToggling = new VanillaFeatures();
     static class VanillaFeatures {
-        boolean netherPortalsDisabled = false;
-        boolean endPortalsDisabled = false;
-        boolean eyesOfEnderDisabled = false;
+        @SerializedName("nether_portals_disabled") boolean netherPortalsDisabled = false;
+        @SerializedName("end_portals_disabled") boolean endPortalsDisabled = false;
+        @SerializedName("eyes_of_ender_disabled") boolean eyesOfEnderDisabled = false;
     }
 
-    PetRespawning petRespawning = new PetRespawning();
+    @SerializedName("pet_respawning") PetRespawning petRespawning = new PetRespawning();
     static class PetRespawning {
         boolean petRespawningEnabled = false;
         int respawnDelay = 120;
     }
 
-    CombatTagging combatTagging = new CombatTagging();
+    @SerializedName("combat_tagging") CombatTagging combatTagging = new CombatTagging();
     static class CombatTagging {
-        boolean combatTaggingEnabled = false;
-        int combatDuration = 15;
-        boolean killPlayerUponCombatLogging = true;
-        List<String> combatTriggeringEntities = List.of("minecraft:player");
+        @SerializedName("combat_tagging_enabled") boolean combatTaggingEnabled = false;
+        @SerializedName("combat_duration") int combatDuration = 15;
+        @SerializedName("kill_players_upon_combat_logging") boolean killPlayerUponCombatLogging = true;
+        @SerializedName("combat_triggering_entities") List<String> combatTriggeringEntities = List.of("minecraft:player");
 
-        CombatDisabledFeatures combatDisabledFeatures = new CombatDisabledFeatures();
+        @SerializedName("combat_disabled_features") CombatDisabledFeatures combatDisabledFeatures = new CombatDisabledFeatures();
         static class CombatDisabledFeatures {
-            boolean disabledEnderPearls = false;
-            boolean disableFireworkRockets = false;
-            boolean disableTridents = false;
+            @SerializedName("disable_ender_pearls") boolean disabledEnderPearls = false;
+            @SerializedName("disable_firework_rockets") boolean disableFireworkRockets = false;
+            @SerializedName("disable_tridents") boolean disableTridents = false;
         }
     }
 
-    TPA tpa = new TPA();
+    @SerializedName("tpa") TPA tpa = new TPA();
     static class TPA {
-        boolean tpaEnabled = false;
-        int tpaTimeout = 10;
-        int tpaExpRequirement = 2;
+        @SerializedName("tpa_enabled") boolean tpaEnabled = false;
+        @SerializedName("tpa_timeout") int tpaTimeout = 10;
+        @SerializedName("tpa_exp_requirement") int tpaExpRequirement = 2;
     }
 
     //thx chatgpt for making these getters and setters sooo helpful!
@@ -186,5 +191,21 @@ public class ModServerConfig {
 
         config.saveConfigFile(file);
         return config;
+    }
+
+    public static byte[] serialize() {
+        JsonObject jsonObject = GSON.toJsonTree(INSTANCE).getAsJsonObject();
+
+        Map<String, Object> map = GSON.fromJson(jsonObject, new TypeToken<Map<String, Object>>() {}.getType());
+
+        String jsonString = GSON.toJson(map);
+
+        return jsonString.getBytes(StandardCharsets.UTF_8);
+    }
+
+    public static Map<String, Object> deserialize(byte[] bytes) {
+        String json = new String(bytes, StandardCharsets.UTF_8);
+
+        return GSON.fromJson(json, new com.google.gson.reflect.TypeToken<Map<String, Object>>() {}.getType());
     }
 }

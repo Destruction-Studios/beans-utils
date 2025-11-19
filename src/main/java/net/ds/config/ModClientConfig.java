@@ -13,7 +13,7 @@ public class ModClientConfig {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
-    public static final Path CONFIG_FILE = Path.of("config").resolve(BeansUtils.MOD_ID).resolve("client_config_v2.json");
+    public static final Path CONFIG_FILE = Path.of("config").resolve(BeansUtils.MOD_ID).resolve("client_config.json");
     public static final ModClientConfig DEFAULTS = new ModClientConfig();
     public static ModClientConfig INSTANCE = load(CONFIG_FILE.toFile());
 

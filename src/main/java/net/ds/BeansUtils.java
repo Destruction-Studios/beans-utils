@@ -6,20 +6,16 @@ import net.ds.events.EndTick;
 import net.ds.events.ServerStopping;
 import net.ds.network.CombatPayload;
 import net.ds.network.HandshakePayload;
-import net.ds.petRespawning.PetManager;
+import net.ds.network.ServerConfigPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -54,6 +50,8 @@ public class BeansUtils implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ModServerConfig.serialize();
+
         registerPayloads();
         registerEvents();
 
@@ -67,6 +65,7 @@ public class BeansUtils implements ModInitializer {
     }
 
     private static void registerEvents() {
+        ServerPlayerEvents.JOIN.register(BeansUtils::onUserJoin);
         ServerTickEvents.END_SERVER_TICK.register(EndTick.INSTANCE);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
             ;
@@ -75,7 +74,7 @@ public class BeansUtils implements ModInitializer {
                 SERVER = minecraftServer;
             }));
 
-            ServerPlayerEvents.JOIN.register(HandshakePayload::attemptHandshake);
+            ServerPlayerEvents.JOIN.register(BeansUtils::onUserJoin);
             ServerPlayerEvents.LEAVE.register((serverPlayerEntity -> {
                 waitingForResponse.remove(serverPlayerEntity.getUuid());
                 clientsWithMods.remove(serverPlayerEntity.getUuid());
@@ -83,10 +82,24 @@ public class BeansUtils implements ModInitializer {
         }
     }
 
+    private static void onUserJoin(ServerPlayerEntity playerEntity) {
+        HandshakePayload.attemptHandshake(playerEntity);
+
+        if (!playerEntity.hasPermissionLevel(4)) {
+            return;
+        }
+        BeansUtils.LOGGER.info("Sending config to admin.");
+        ServerPlayNetworking.send(
+                playerEntity,
+                new ServerConfigPayload.ServerConfigS2CPayload(ModServerConfig.serialize())
+        );
+    }
+
     private static void registerPayloads() {
         PayloadTypeRegistry.playC2S().register(HandshakePayload.HandshakeC2SPayload.ID, HandshakePayload.HandshakeC2SPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(HandshakePayload.HandshakeS2CPayload.ID, HandshakePayload.HandshakeS2CPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(CombatPayload.CombatS2CPayload.ID, CombatPayload.CombatS2CPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ServerConfigPayload.ServerConfigS2CPayload.ID, ServerConfigPayload.ServerConfigS2CPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(HandshakePayload.HandshakeC2SPayload.ID, (BeansUtils::playerHandshakeRespond));
     }
