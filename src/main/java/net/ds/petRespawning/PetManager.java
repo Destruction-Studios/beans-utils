@@ -116,7 +116,7 @@ public class PetManager {
         if (entityType == EntityType.WOLF) {
             WolfEntity wolf = (WolfEntity) entity;
             wolf.setOwner(player);
-            data.get("collar_color", DyeColor.CODEC).ifPresent((value) -> wolf.getDataTracker().set(WolfEntity., value.getIndex()));
+//            data.get("collar_color", DyeColor.CODEC).ifPresent((value) -> wolf.getDataTracker().set(WolfEntity., value.getIndex()));
         }
 
         entity.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), 0, 0);
