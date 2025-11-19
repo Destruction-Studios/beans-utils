@@ -8,6 +8,8 @@
 		"TheFounderOfBeanz"
 	],
 	"contact": {
+		"homepage": "https://modrinth.com/mod/beans-utils",
+		"issues": "https://github.com/Destruction-Studios/beans-utils/issues",
 		"sources": "https://github.com/Destruction-Studios/beans-utils"
 	},
 	"license": "Apache-2.0",
