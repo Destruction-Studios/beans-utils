@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 import net.ds.BeansUtils;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,6 +25,7 @@ public class ModServerConfig {
     public static ModServerConfig INSTANCE = load(CONFIG_FILE.toFile());
 
     @SerializedName("mod_settings") ModSettings modSettings = new ModSettings();
+
     static class ModSettings {
         @SerializedName("require_mod") boolean requireMod = false;
         @SerializedName("kick_message") String kickMessage = "This server requires BeansUtils.";
@@ -192,6 +194,79 @@ public class ModServerConfig {
         config.saveConfigFile(file);
         return config;
     }
+
+    public static void applyUpdates(Map<String, Object> des) {
+        mergeInto(INSTANCE, des);
+        INSTANCE.save();
+        BeansUtils.LOGGER.info("updated... refreshing");
+        BeansUtils.refreshConfigToAll(serialize());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void mergeInto(Object targetObject, Map<String, Object> updates) {
+        Class<?> clazz = targetObject.getClass();
+
+        for (Map.Entry<String, Object> entry : updates.entrySet()) {
+            String key = entry.getKey();
+            Object newValue = entry.getValue();
+
+            try {
+                var field = findFieldBySerializedName(clazz, key);
+                if (field == null) {
+                    BeansUtils.LOGGER.error("Field not found for key {}", key);
+                    continue;
+                }
+                field.setAccessible(true);
+
+                Object currentValue = field.get(targetObject);
+
+                // If both sides are maps, recurse into nested object
+                if (newValue instanceof Map && currentValue != null) {
+                    mergeInto(
+                            currentValue,
+                            (Map<String, Object>) newValue
+                    );
+                    continue;
+                }
+
+                // Fix gson double -> int garbage
+                Class<?> type = field.getType();
+                if (type == int.class || type == Integer.class) {
+                    if (newValue instanceof Number n) {
+                        newValue = n.intValue();
+                    }
+                }
+
+                if (type == boolean.class || type == Boolean.class) {
+                    if (newValue instanceof Boolean b) {
+                        // ok
+                    } else if (newValue instanceof Number n) {
+                        newValue = n.intValue() != 0;
+                    }
+                }
+
+                field.set(targetObject, newValue);
+
+            } catch (Exception ex) {
+                BeansUtils.LOGGER.error("Failed to apply key {}: {}", key, ex.getMessage());
+            }
+        }
+    }
+
+    private static Field findFieldBySerializedName(Class<?> clazz, String jsonName) {
+        for (Field f : clazz.getDeclaredFields()) {
+            SerializedName sn = f.getAnnotation(SerializedName.class);
+            if (sn != null && sn.value().equals(jsonName)) {
+                return f;
+            }
+            // fallback: actual field name matches
+            if (f.getName().equals(jsonName)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
 
     public static byte[] serialize() {
         JsonObject jsonObject = GSON.toJsonTree(INSTANCE).getAsJsonObject();

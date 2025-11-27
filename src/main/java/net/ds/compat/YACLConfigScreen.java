@@ -254,11 +254,10 @@ public class YACLConfigScreen {
 
                             .build()
             );
-
-            return builder.build().generateScreen(parent);
         }
 
         return builder.save(() -> {
+            BeansUtils.LOGGER.info("SAVING CONFIG... (Server: {})", serverConfig != null);
             ModClientConfig.INSTANCE.save();
             if (serverConfig != null) serverConfig.pushUpdate();
         }).build().generateScreen(parent);

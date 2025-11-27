@@ -6,7 +6,7 @@ import net.ds.events.EndTick;
 import net.ds.events.ServerStopping;
 import net.ds.network.CombatPayload;
 import net.ds.network.HandshakePayload;
-import net.ds.network.ServerConfigPayload;
+import net.ds.network.ConfigSyncPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -64,15 +64,32 @@ public class BeansUtils implements ModInitializer {
         return Identifier.of(MOD_ID, path);
     }
 
+    public static void refreshConfigToAll(byte[] ser) {
+        for (ServerPlayerEntity player : SERVER.getPlayerManager().getPlayerList()) {
+            attemptUpdateConfig(player, ser);
+        }
+    }
+
+    public static void attemptUpdateConfig(ServerPlayerEntity player, byte[] ser) {
+        if (!player.hasPermissionLevel(4)) {
+            return;
+        }
+        BeansUtils.LOGGER.info("Sending config to {}", player.getName().getString());
+        ServerPlayNetworking.send(
+                player,
+                new ConfigSyncPayload.ServerConfigS2CPayload(ModServerConfig.serialize())
+        );
+    }
+
     private static void registerEvents() {
         ServerPlayerEvents.JOIN.register(BeansUtils::onUserJoin);
         ServerTickEvents.END_SERVER_TICK.register(EndTick.INSTANCE);
+        ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer -> {
+            SERVER = minecraftServer;
+        }));
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            ;
             ServerLifecycleEvents.SERVER_STOPPING.register(ServerStopping.INSTANCE);
-            ServerLifecycleEvents.SERVER_STARTING.register((minecraftServer -> {
-                SERVER = minecraftServer;
-            }));
+
 
             ServerPlayerEvents.JOIN.register(BeansUtils::onUserJoin);
             ServerPlayerEvents.LEAVE.register((serverPlayerEntity -> {
@@ -85,23 +102,26 @@ public class BeansUtils implements ModInitializer {
     private static void onUserJoin(ServerPlayerEntity playerEntity) {
         HandshakePayload.attemptHandshake(playerEntity);
 
-        if (!playerEntity.hasPermissionLevel(4)) {
-            return;
-        }
-        BeansUtils.LOGGER.info("Sending config to admin.");
-        ServerPlayNetworking.send(
-                playerEntity,
-                new ServerConfigPayload.ServerConfigS2CPayload(ModServerConfig.serialize())
-        );
+        attemptUpdateConfig(playerEntity, ModServerConfig.serialize());
     }
 
     private static void registerPayloads() {
         PayloadTypeRegistry.playC2S().register(HandshakePayload.HandshakeC2SPayload.ID, HandshakePayload.HandshakeC2SPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(HandshakePayload.HandshakeS2CPayload.ID, HandshakePayload.HandshakeS2CPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(CombatPayload.CombatS2CPayload.ID, CombatPayload.CombatS2CPayload.CODEC);
-        PayloadTypeRegistry.playS2C().register(ServerConfigPayload.ServerConfigS2CPayload.ID, ServerConfigPayload.ServerConfigS2CPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ConfigSyncPayload.ServerConfigS2CPayload.ID, ConfigSyncPayload.ServerConfigS2CPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(ConfigSyncPayload.ServerConfigC2SPayload.ID, ConfigSyncPayload.ServerConfigC2SPayload.CODEC);
 
         ServerPlayNetworking.registerGlobalReceiver(HandshakePayload.HandshakeC2SPayload.ID, (BeansUtils::playerHandshakeRespond));
+        ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPayload.ServerConfigC2SPayload.ID, ((payload, context) -> {
+            BeansUtils.LOGGER.info("Received updated config...");
+
+            byte[] bytes = payload.updatedConfig();
+
+            Map<String, Object> des = ModServerConfig.deserialize(bytes);
+
+            ModServerConfig.applyUpdates(des);
+        }));
     }
 
     public static void handshakeServerTick(MinecraftServer server) {

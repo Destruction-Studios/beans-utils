@@ -1,18 +1,16 @@
 package net.ds;
 
 import net.ds.config.ModClientConfig;
-import net.ds.config.ModServerConfig;
 import net.ds.config.sync.MutableServerConfig;
 import net.ds.network.CombatPayload;
 import net.ds.network.HandshakePayload;
-import net.ds.network.ServerConfigPayload;
+import net.ds.network.ConfigSyncPayload;
 import net.ds.util.ToastUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.text.Text;
-
-import java.util.Map;
+import net.minecraft.util.Formatting;
 
 public class BeansUtilsClient implements ClientModInitializer {
     public static boolean isInCombat = false;
@@ -38,11 +36,11 @@ public class BeansUtilsClient implements ClientModInitializer {
             isInCombat = combatS2CPayload.isInCombat();
             BeansUtils.LOGGER.info("Received combat packet: {}", isInCombat);
         }));
-        ClientPlayNetworking.registerGlobalReceiver(ServerConfigPayload.ServerConfigS2CPayload.ID, (packet, context) -> {
+        ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPayload.ServerConfigS2CPayload.ID, (packet, context) -> {
             BeansUtils.LOGGER.info("Received server config...");
 
             if (SERVER_CONFIG.isPresent()) {
-                ToastUtil.toasty(Text.of("Server config has been updated!"));
+                ToastUtil.toasty(Text.literal("Server config has been updated!").formatted(Formatting.YELLOW));
             }
 
             SERVER_CONFIG.onReceivedServerConfig(packet.serverConfig());

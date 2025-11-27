@@ -4,14 +4,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.ds.BeansUtils;
+import net.ds.network.ConfigSyncPayload;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class MutableServerConfig {
+    private static final String[] DOUBLE_TO_INT = {"pet_respawning.respawnDelay", "combat_tagging.combat_duration", "tpa.tpa_timeout", "mod_settings.handshake_timeout"};
+
     private final Map<String, Object> serverConfig = new HashMap<>();
     private static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
@@ -19,9 +22,9 @@ public class MutableServerConfig {
     private boolean hasBeenUpdated = false;
     private boolean hasReceived = false;
 
-    public MutableServerConfig() {};
+    public MutableServerConfig() {}
 
-    public boolean isPresent() { return hasReceived; }
+    public boolean isPresent() {return hasReceived;}
 
     public void clearServerConfig() {
         hasBeenUpdated = false;
@@ -33,7 +36,8 @@ public class MutableServerConfig {
         hasReceived = true;
         String json = new String(bytes, StandardCharsets.UTF_8);
         Map<String, Object> map = GSON.fromJson(json,
-                new TypeToken<Map<String, Object>>() {}.getType());
+                new TypeToken<Map<String, Object>>() {
+                }.getType());
 
         //changing doubles to int
         map = (Map<String, Object>) SyncUtils.fixNumber(map);
@@ -42,19 +46,6 @@ public class MutableServerConfig {
         serverConfig.putAll(map);
         BeansUtils.LOGGER.info("Synced Full Server Config");
     }
-
-//    public <T> T  get(String key, T fallback) {
-//        Object val = serverConfig.get(key);
-//        if (val == null) {
-//            BeansUtils.LOGGER.info("{} is Null, returning fallback", key);
-//            return fallback;
-//        }
-//        try { return (T) val; }
-//        catch (ClassCastException e) {
-//            BeansUtils.LOGGER.info("Failed to cast");
-//            return fallback;
-//        }
-//    }
 
     public <T> T getByPath(String path, T fallback) {
         String[] parts = path.split("\\.");
@@ -100,10 +91,6 @@ public class MutableServerConfig {
         serverConfig.put(key, value);
     }
 
-    public String toJson() {
-        return GSON.toJson(serverConfig);
-    }
-
     public void pushUpdate() {
         if (!hasBeenUpdated) {
             BeansUtils.LOGGER.info("No server config update; not pushing");
@@ -111,6 +98,11 @@ public class MutableServerConfig {
         }
         hasBeenUpdated = false;
         BeansUtils.LOGGER.info("Pushing server update.");
+
+        String json = GSON.toJson(serverConfig);
+        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+
+        ClientPlayNetworking.send(new ConfigSyncPayload.ServerConfigC2SPayload(bytes));
     }
 
 }
